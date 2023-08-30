@@ -10,7 +10,12 @@ version = "0.1.0"
 
 repositories {
     maven("https://maven.aliyun.com/repository/public")
+    maven("https://mirrors.cloud.tencent.com/nexus/repository/maven-public")
     mavenCentral()
+}
+
+dependencies{
+    implementation("cn.hutool:hutool-all:5.8.21")
 }
 
 mirai {
