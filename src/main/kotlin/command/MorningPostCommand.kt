@@ -5,7 +5,6 @@ import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.message.data.ForwardMessageBuilder
 import net.mamoe.mirai.message.data.PlainText
 import top.phj233.MorningPost
-import top.phj233.MorningPost.bot
 import top.phj233.config.Config
 
 object MorningPostCommand : CompositeCommand(
@@ -26,10 +25,8 @@ object MorningPostCommand : CompositeCommand(
             | /morningpost reload - 重载插件
         """.trimMargin()
         sender.user?.let {
-            val forwardMessage = ForwardMessageBuilder(it)
-                .add(bot.id, bot.nick, PlainText(helpText))
-                .build()
-            sender.sendMessage(forwardMessage)
+            val message = ForwardMessageBuilder(it).add(sender.bot!!.id, sender.bot!!.nick, PlainText(helpText)).build()
+            sender.sendMessage(message)
         }
     }
 
