@@ -26,6 +26,10 @@ object Config : AutoSavePluginConfig("config"){
     @ValueDescription("每日60s早报发送时间 支持cron表达式")
     var news_time by value<String>("0 30 9 * * *")
 
+    @ValueName("history-time")
+    @ValueDescription("历史上的今天发送时间 支持cron表达式")
+    var history_time by value<String>("0 0 8 * * *")
+
     @ValueName("moyu-api")
     @ValueDescription("摸鱼人日历api")
     var moyu_api by value<String>("https://j4u.ink/moyuya")
@@ -33,6 +37,10 @@ object Config : AutoSavePluginConfig("config"){
     @ValueName("60s-api")
     @ValueDescription("每日60s早报api ")
     var news_api by value<String>("https://v2.alapi.cn/api/zaobao")
+
+    @ValueName("history-api")
+    @ValueDescription("历史上的今天api ")
+    var history_api by value<String>("https://qzrjj.cn/VgTuC")
 
     @ValueName("news-api-token")
     @ValueDescription("每日60s早报api token,务必注册 https://alapi.cn 后在个人中心获取填写 ")
