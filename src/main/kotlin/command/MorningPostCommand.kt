@@ -5,7 +5,9 @@ import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.message.data.ForwardMessageBuilder
 import net.mamoe.mirai.message.data.PlainText
 import top.phj233.MorningPost
+import top.phj233.MorningPost.reload
 import top.phj233.config.Config
+import top.phj233.corn.MorningPostSchedule
 
 object MorningPostCommand : CompositeCommand(
     owner = MorningPost,
@@ -22,6 +24,7 @@ object MorningPostCommand : CompositeCommand(
             | /morningpost group <add|remove|list> <group> - 添加/删除/查看发送群组
             | /morningpost moyu <time|api> <value> - 设置摸鱼人日历发送时间/设置摸鱼人日历api
             | /morningpost news <time|api|token> <value> - 设置每日60s早报发送时间/api/token
+            | /morningpost history <time|api> <value> - 设置历史上的今天发送时间/api
             | /morningpost reload - 重载插件
         """.trimMargin()
         sender.user?.let {
@@ -235,9 +238,41 @@ object MorningPostCommand : CompositeCommand(
         }
     }
 
+    @SubCommand("history")
+    suspend fun history(sender: CommandSender, action: String){
+        when(action){
+            "time" -> {
+                sender.sendMessage("现在历史上的今天发送时间为: ${Config.history_time}")
+            }
+            "api" -> {
+                sender.sendMessage("现在历史上的今天api为: ${Config.history_api}")
+            }
+            else -> {
+                sender.sendMessage("未知指令")
+            }
+        }
+    }
+
+    @SubCommand("history")
+    suspend fun history(sender: CommandSender, action: String, value: String){
+        when(action){
+            "time" -> {
+                Config.history_time = value
+                sender.sendMessage("历史上的今天发送时间已设置为: $value")
+            }
+            "api" -> {
+                Config.history_api = value
+                sender.sendMessage("历史上的今天api已设置为: $value")
+            }
+            else -> {
+                sender.sendMessage("未知指令")
+            }
+        }
+    }
     @SubCommand("reload")
     suspend fun reload(sender: CommandSender){
-        // TODO: 重载插件
+        Config.reload()
+        MorningPostSchedule().restart()
         sender.sendMessage("MorningPost 重载成功")
     }
 
