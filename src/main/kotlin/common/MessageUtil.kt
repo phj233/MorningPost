@@ -1,11 +1,11 @@
 package top.phj233.common
 
-import kotlinx.coroutines.runBlocking
-import net.mamoe.mirai.Bot
-import net.mamoe.mirai.contact.Contact.Companion.sendImage
-import net.mamoe.mirai.message.data.Message
-import top.phj233.config.Config
-import java.io.ByteArrayInputStream
+import net.mamoe.mirai.contact.Contact.Companion.uploadImage
+import net.mamoe.mirai.message.data.Image
+import net.mamoe.mirai.message.data.MessageChain
+import top.phj233.MorningPost.BOT_INSTANCE
+import java.io.InputStream
+import java.net.URL
 
 /**
  * 消息发送工具类
@@ -14,34 +14,24 @@ import java.io.ByteArrayInputStream
  * @version
  */
 object MessageUtil {
-    fun sendGroupTextMessage(text : String) {
-        Bot.instances.filter { it.isOnline }.forEach { bot ->
-            Config.group.forEach { group ->
-                runBlocking {
-                    bot.getGroup(group)?.sendMessage(text)
-                }
-            }
+    fun isImage(url: String): Boolean {
+        val connection = URL(url).openConnection()
+        connection.setRequestProperty("User-Agent", "Mozilla/5.0")
+        val contentType = connection.getHeaderField("Content-Type")
+        return contentType.startsWith("image/")
+    }
+
+    suspend fun uploadImageToGroup(group: Long, stream: InputStream): Image? {
+        stream.use {
+            return BOT_INSTANCE.getGroup(group)?.uploadImage(stream)
         }
     }
 
-    fun sendGroupImageMessage(image : ByteArrayInputStream) {
-        Bot.instances.filter { it.isOnline }.forEach { bot ->
-            Config.group.forEach { group ->
-                runBlocking {
-                    bot.getGroup(group)?.sendImage(image)
-                    image.close()
-                }
-            }
-        }
+    suspend fun sendMessageToGroup(group: Long, messageChain: MessageChain) {
+        BOT_INSTANCE.getGroup(group)?.sendMessage(messageChain)
     }
 
-    fun sendGroupMessageChain(messageChain : Message) {
-        Bot.instances.filter { it.isOnline }.forEach { bot ->
-            Config.group.forEach { group ->
-                runBlocking {
-                    bot.getGroup(group)?.sendMessage(messageChain)
-                }
-            }
-        }
+    suspend fun sendMessageToGroup(group: Long, text: String) {
+        BOT_INSTANCE.getGroup(group)?.sendMessage(text)
     }
 }
