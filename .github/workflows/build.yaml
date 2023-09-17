@@ -19,11 +19,28 @@ jobs:
       - name: chmod -R 777 *
         run: chmod -R 777 *
 
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+
       - name: Build Mirai Plugin
         run: ./gradlew buildPlugin
 
-      - name: Upload Mirai Plugin
+      - name: Upload Mirai Plugin Artifact
         uses: actions/upload-artifact@v3
         with:
           name: build-${{ github.run_id }}
           path: build/mirai/*
+
+      - name: Upload Mirai Plugin Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.RELEASE_TOKEN }}
+          file: build/mirai/*
+          tag: ${{ github.ref }}
+          overwrite: true
+          name: ${{ github.ref }}
+          body: ${{ github.event.head_commit.message }}
