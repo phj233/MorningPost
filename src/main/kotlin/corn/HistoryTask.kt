@@ -2,10 +2,12 @@ package top.phj233.corn
 
 import cn.hutool.core.img.ImgUtil
 import cn.hutool.cron.task.Task
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.message.data.messageChainOf
+import top.phj233.MorningPost
 import top.phj233.common.MessageUtil
+import top.phj233.common.MessageUtil.sendMessageToGroup
 import top.phj233.config.Config
 import java.net.URL
 
@@ -17,21 +19,22 @@ import java.net.URL
  */
 class HistoryTask : Task {
     override fun execute() {
-        val historyImage = if (MessageUtil.isImage(Config.history_api)) {
-            ImgUtil.getImage(URL(Config.history_api))
+        val historyApi = Config.history_api
+        val historyImage = if (MessageUtil.isImage(historyApi)) {
+            ImgUtil.getImage(URL(historyApi))
         } else {
             TODO()
         }
         if (historyImage != null) {
             Config.group.forEach { group ->
-                runBlocking {
-                    val historyImgStream = ImgUtil.toStream(historyImage, "png")
+                MorningPost.launch {
+                    val historyImgStream = ImgUtil.toStream(historyImage, "jpg")
                     val image = MessageUtil.uploadImageToGroup(group, historyImgStream)
                     if (image != null) {
                         val messageChain = messageChainOf(PlainText("历史上的今天"), image)
-                        MessageUtil.sendMessageToGroup(group, messageChain)
+                        sendMessageToGroup(group, messageChain)
                     } else {
-                        MessageUtil.sendMessageToGroup(group, "上传历史图片失败")
+                        sendMessageToGroup(group, "上传历史图片失败")
                     }
                 }
             }
