@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies{
-    implementation("cn.hutool:hutool-all:5.8.21")
+    implementation("cn.hutool:hutool-all:5.8.22")
 }
 
 mirai {
