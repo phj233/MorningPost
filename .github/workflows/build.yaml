@@ -29,6 +29,9 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Upload Mirai Plugin Artifact
         uses: actions/upload-artifact@v3
@@ -40,7 +43,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.RELEASE_TOKEN }}
-          file: build/mirai/
+          file: build/mirai/MorningPost*
           tag: ${{ github.ref }}
           overwrite: true
           name: ${{ github.ref }}
