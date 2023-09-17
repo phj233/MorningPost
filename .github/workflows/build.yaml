@@ -43,7 +43,8 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.RELEASE_TOKEN }}
-          file: build/mirai/MorningPost*
-          tag: ${{ github.ref }}
+          file_glob: true
+          file: build/mirai/*
+          tag: MorningPost
           overwrite: true
           body: ${{ github.event.head_commit.message }}
