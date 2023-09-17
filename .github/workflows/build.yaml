@@ -1,8 +1,9 @@
 name: "build plugin"
 on:
   push:
-    paths:
-      - "build.gradle.kts"
+    paths: |
+        - '.github/workflows/build.yaml'
+        - 'build.gradle.kts'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,15 +20,15 @@ jobs:
       - name: chmod -R 777 *
         run: chmod -R 777 *
 
+      - name: Build Mirai Plugin
+        run: ./gradlew buildPlugin
+
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-
-      - name: Build Mirai Plugin
-        run: ./gradlew buildPlugin
 
       - name: Upload Mirai Plugin Artifact
         uses: actions/upload-artifact@v3
@@ -39,7 +40,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.RELEASE_TOKEN }}
-          file: build/mirai/*
+          file: build/mirai/
           tag: ${{ github.ref }}
           overwrite: true
           name: ${{ github.ref }}
