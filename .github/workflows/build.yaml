@@ -21,7 +21,7 @@ jobs:
         run: chmod -R 777 *
 
       - name: Build Mirai Plugin
-        run: ./gradlew buildPlugin
+        run: ./gradlew buildPlugin --no-daemon
 
       - name: Cache Gradle packages
         uses: actions/cache@v3
