@@ -40,7 +40,7 @@ object Config : AutoSavePluginConfig("config"){
 
     @ValueName("history-api")
     @ValueDescription("历史上的今天api ")
-    var history_api by value<String>("https://qzrjj.cn/VgTuC")
+    var history_api by value<String>("https://xiaoapi.cn/API/lssdjt_pic.php")
 
     @ValueName("news-api-token")
     @ValueDescription("每日60s早报api token,务必注册 https://alapi.cn 后在个人中心获取填写 ")
