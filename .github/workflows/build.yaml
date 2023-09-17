@@ -46,5 +46,4 @@ jobs:
           file: build/mirai/MorningPost*
           tag: ${{ github.ref }}
           overwrite: true
-          name: ${{ github.ref }}
           body: ${{ github.event.head_commit.message }}
